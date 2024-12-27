@@ -36,7 +36,7 @@ interface Item {
 
 // const API_URL = "http://localhost:5000/githubUser/getDetails/";
 
-const API_URL = 'git-hub-wrapped-2024-express-type-script-backend.vercel.app';
+// const Backend_API_URL = '';
 
 const FormPage = () => {
     const { toast } = useToast()
@@ -68,7 +68,7 @@ const FormPage = () => {
         setError(""); // Clear any previous error
 
         try {
-            const response = await fetch(`${API_URL}/githubUser/getDetails/${username}`);
+            const response = await fetch(`https://git-hub-wrapped-2024-express-type-script-backend.vercel.app/githubUser/getDetails/${username}`);
             if (!response.ok) {
                 setError("GitHub user not found.");
                 toast({
@@ -253,24 +253,24 @@ const FormPage = () => {
         <>
             <div className="relative min:h-screen  w-full items-center justify-center overflow-hidden rounded-lg border bg-background p-20 pt-10">
                 {isValid ? (<>
-                        <Card className="p-5">
-                            <AnimatedGradientText className="mb-10">
-                                🎉 <hr className="mx-2 h-4 w-px shrink-0 bg-gray-300" />{" "}
-                                <span
-                                    className={cn(
-                                        `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
-                                    )}
-                                >
-                                    {date?.username}
-                                </span>
-                                <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-                            </AnimatedGradientText>
-                            <BentoGrid>
-                                {features.map((feature, idx) => (
-                                    <BentoCard key={idx} {...feature} />
-                                ))}
-                            </BentoGrid>
-                        </Card>
+                    <Card className="p-5">
+                        <AnimatedGradientText className="mb-10">
+                            🎉 <hr className="mx-2 h-4 w-px shrink-0 bg-gray-300" />{" "}
+                            <span
+                                className={cn(
+                                    `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
+                                )}
+                            >
+                                {date?.username}
+                            </span>
+                            <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+                        </AnimatedGradientText>
+                        <BentoGrid>
+                            {features.map((feature, idx) => (
+                                <BentoCard key={idx} {...feature} />
+                            ))}
+                        </BentoGrid>
+                    </Card>
                 </>) : (<>
                     <div className="h-[500px] flex justify-center items-center">
                         <Card className="w-[350px] relative">
