@@ -10,29 +10,28 @@ const LandingPage = () => {
             <div className="relative flex h-screen w-full items-center justify-center overflow-hidden rounded-lg border bg-background p-20 ">
                 <div className="size-full max-w-lg items-center justify-center overflow-hidden pt-8">
                     <BoxReveal boxColor={"#133E87"} duration={0.5}>
-                        <p className="text-[3.5rem] font-semibold">
-                            Magic UI<span className="text-[#133E87]">.</span>
+                        <p className="text-[2.5rem] font-semibold">
+                            GitHub Wrapped 2024<span className="text-[#133E87]">.</span>
                         </p>
                     </BoxReveal>
 
                     <BoxReveal boxColor={"#133E87"} duration={0.5}>
                         <h2 className="mt-[.5rem] text-[1rem]">
-                            UI library for{" "}
-                            <span className="text-[#133E87]">Design Engineers</span>
+                        Your Year, Your Code.{" "}
+                            <span className="text-[#133E87]">Visualized.</span>
                         </h2>
                     </BoxReveal>
 
                     <BoxReveal boxColor={"#133E87"} duration={0.5}>
                         <div className="mt-6">
                             <p>
-                                -&gt; 20+ free and open-source animated components built with
-                                <span className="font-semibold text-[#133E87]"> React</span>,
-                                <span className="font-semibold text-[#133E87]"> Typescript</span>,
-                                <span className="font-semibold text-[#133E87]"> Tailwind CSS</span>,
+                                -&gt; Seamless Integration: All data fetched directly from the   
+                                <span className="font-semibold text-[#133E87]"> GitHub API</span>,
+                                for
+                                <span className="font-semibold text-[#133E87]"> real-time stats</span>,
                                 and
-                                <span className="font-semibold text-[#133E87]"> Framer Motion</span>
+                                <span className="font-semibold text-[#133E87]"> insights.</span>
                                 . <br />
-                                -&gt; 100% open-source, and customizable. <br />
                             </p>
                         </div>
                     </BoxReveal>

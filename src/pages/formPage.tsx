@@ -34,7 +34,9 @@ interface Item {
     time: string;
 }
 
-const API_URL = "http://localhost:5000/githubUser/getDetails/";
+// const API_URL = "http://localhost:5000/githubUser/getDetails/";
+
+const API_URL = 'git-hub-wrapped-2024-express-type-script-backend.vercel.app';
 
 const FormPage = () => {
     const { toast } = useToast()
