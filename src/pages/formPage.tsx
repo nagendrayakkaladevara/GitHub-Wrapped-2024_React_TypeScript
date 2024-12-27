@@ -68,7 +68,7 @@ const FormPage = () => {
         setError(""); // Clear any previous error
 
         try {
-            const response = await fetch(`${API_URL}${username}`);
+            const response = await fetch(`${API_URL}/githubUser/getDetails/${username}`);
             if (!response.ok) {
                 setError("GitHub user not found.");
                 toast({
