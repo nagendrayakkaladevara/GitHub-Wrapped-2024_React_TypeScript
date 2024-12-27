@@ -251,7 +251,7 @@ const FormPage = () => {
 
     return (
         <>
-            <div className="relative min:h-screen  w-full items-center justify-center overflow-hidden rounded-lg border bg-background p-20 pt-10">
+            <div className="relative min:h-screen  w-full items-center justify-center overflow-hidden rounded-lg border bg-background p-5 md:p-10 pt-10">
                 {isValid ? (<>
                     <Card className="p-5">
                         <AnimatedGradientText className="mb-10">
