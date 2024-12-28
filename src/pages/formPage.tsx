@@ -16,7 +16,7 @@ import TooltipWithTrigger from "@/components/customComponents/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Code, GitCommitHorizontal, Share2Icon, Flame, Star, ChevronRight } from "lucide-react";
+import { Code, GitCommitHorizontal, Share2Icon, Flame, Star } from "lucide-react";
 import NumberTicker from "@/components/ui/number-ticker";
 import { AnimatedList } from "@/components/ui/animated-list";
 import SparklesText from "@/components/ui/sparkles-text";
@@ -25,6 +25,12 @@ import BlurIn from "@/components/ui/blur-in";
 import FlipText from "@/components/ui/flip-text";
 import HyperText from "@/components/ui/hyper-text";
 import AnimatedGradientText from "@/components/ui/animated-gradient-text";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import ShineBorder from "@/components/ui/shine-border";
 
 interface Item {
     name: string;
@@ -38,14 +44,32 @@ interface Item {
 
 // const Backend_API_URL = '';
 
+const authUsername = import.meta.env.VITE_AUTH_USERNAME;
+const authPassword = import.meta.env.VITE_AUTH_PASSWORD;
+
+
+
 const FormPage = () => {
-    const { toast } = useToast()
+    const { toast } = useToast();
+
+    const getColorClass = (count: number) => {
+        if (count === 0) return "bg-gray-200";
+        if (count < 5) return "bg-green-100";
+        if (count < 10) return "bg-green-300";
+        if (count < 15) return "bg-green-500";
+        return "bg-green-700";
+    };
+
+    console.log('Username:', authUsername);
+    console.log('Password:', authPassword);
+
 
     const [username, setUsername] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [isValid, setIsValid] = useState<boolean>(false);
-    const [date, setData] = useState<any>({});
+    const [date, setData] = useState<any>(null);
+    const [avatarUrl, setAvatarUrl] = useState<string>('');
 
     const validateUsername = (input: string) => {
         // GitHub username validation regex
@@ -60,38 +84,70 @@ const FormPage = () => {
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
                 description: "Please enter a valid GitHub username.",
-            })
+            });
             return;
         }
 
         setLoading(true);
-        setError(""); // Clear any previous error
+        setError("");
 
         try {
-            const response = await fetch(`https://git-hub-wrapped-2024-express-type-script-backend.vercel.app/githubUser/getDetails/${username}`);
+
+            if (!authUsername || !authPassword) {
+                throw new Error("Authentication credentials are missing. Please check your .env file.");
+            }
+
+            const authHeader = `Basic ${btoa(`${authUsername}:${authPassword}`)}`;
+
+            const response = await fetch(`https://git-hub-wrapped-2024-express-type-script-backend.vercel.app/githubUser/getDetails/${username}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': authHeader,
+                },
+            });
+
             if (!response.ok) {
                 setError("GitHub user not found.");
                 toast({
                     variant: "destructive",
                     title: "Uh oh! Something went wrong.",
                     description: "GitHub user not found.",
-
-                })
+                });
                 setIsValid(false);
             } else {
                 const data = await response.json();
                 setIsValid(true);
                 setData(data);
-                // console.log("GitHub user data:", data); // Handle the data as needed
             }
-        } catch (error) {
-            setError("Failed to fetch data from GitHub.");
+        } catch (error: any) {
+            console.error("Error:", error.message || error);
+            setError(error.message || "Failed to fetch data from GitHub.");
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: "Failed to fetch data from GitHub.",
-            })
+                description: error.message || "Failed to fetch data from GitHub.",
+            });
             setIsValid(false);
+        } finally {
+            setLoading(false);
+        }
+        fetchGitHubUser();
+    };
+
+    const fetchGitHubUser = async () => {
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch(`https://api.github.com/users/${username}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch GitHub user data');
+            }
+
+            const data = await response.json();
+            setAvatarUrl(data.avatar_url);
+        } catch (error: any) {
+            setError(error.message);
         } finally {
             setLoading(false);
         }
@@ -120,7 +176,6 @@ const FormPage = () => {
             color: "#1E86FF",
         },
     ];
-
 
     const Notification = ({ name, icon, color }: Item) => {
         return (
@@ -156,6 +211,32 @@ const FormPage = () => {
 
 
     const features = [
+        {
+            Icon: GitCommitHorizontal,
+            name: "Total Commits made in 2024",
+            description: "",
+            href: "#",
+            cta: "",
+            className: "col-span-3 lg:col-span-3",
+            background: (
+                <div className="transform scale-x-[-1] rotate-[-90deg]">
+                    <div className="grid grid-cols-7 gap-[2px] md:gap-1">
+                        {date && date.contributions.map((day: any, index: any) => (
+                            <TooltipWithTrigger
+                                trigger={
+                                    <div
+                                        key={index}
+                                        className={`w-1 md:w-2 lg:w-3 xl:w-4 h-1 md:h-2 lg:h-3 xl:h-4 rounded-none lg:rounded ${getColorClass(day.contributionCount)} transition-transform transform hover:scale-110`}
+                                    // title={`Date: ${day.date}, Contributions: ${day.contributionCount}`}
+                                    ></div>
+                                }
+                                content={`Date: ${day.date}, Contributions: ${day.contributionCount}`}
+                            />
+                        ))}
+                    </div>
+                </div>
+            ),
+        },
         {
             Icon: GitCommitHorizontal,
             name: "Total Commits made in 2024",
@@ -223,6 +304,17 @@ const FormPage = () => {
             ),
         },
         {
+            Icon: CalendarIcon,
+            name: "Most Active Day",
+            description: "",
+            className: "col-span-3 lg:col-span-1",
+            href: "#",
+            cta: "",
+            background: (
+                <HyperText>{`${date?.mostActiveDay?.name} - ${date?.mostActiveDay?.commits}`}</HyperText>
+            ),
+        },
+        {
             Icon: Star,
             name: "Stars Earned",
             description: "",
@@ -235,27 +327,39 @@ const FormPage = () => {
                     word={`${date?.starsEarned}`}
                 />
             ),
-        },
-        {
-            Icon: CalendarIcon,
-            name: "Most Active Day",
-            description: "",
-            className: "col-span-3 lg:col-span-1",
-            href: "#",
-            cta: "",
-            background: (
-                <HyperText>{`${date?.mostActiveDay?.name} - ${date?.mostActiveDay?.commits}`}</HyperText>
-            ),
-        },
+        }
     ];
 
     return (
         <>
             <div className="relative min:h-screen  w-full items-center justify-center overflow-hidden rounded-lg border bg-background p-5 md:p-10 pt-10">
                 {isValid ? (<>
-                    <Card className="p-5">
+                    <div className="absolute top-2 right-4">
+                        <Popover >
+                            <PopoverTrigger asChild>
+                                <Button variant="outline" className="text-xs p-0 border-none">
+                                    <ShineBorder
+                                        className="py-2 px-4 font-medium"
+                                        color={["#A07CFE", "#FE8FB5", "#FFBE7B"]}
+                                    >Who built this?</ShineBorder>
+                                </Button>
+
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80 mr-2">
+                                <div className="font-semibold leading-none tracking-tight flex items-center justify-between">
+                                    <p>Built with ❤️</p>
+                                </div>
+                                <div className="text-sm text-gray-700">Curious about the creator?</div>
+                                <p className="text-sm text-gray-700 pt-2">This awesome project was crafted by a passionate developer who loves creating cool stuff!</p>
+                                <div className="flex w-full pt-4">
+                                    <a href="https://newnagendra.netlify.app/" target="_blank" className="w-full"><Button className="w-full" variant="outline">Visit My Portfolio</Button></a>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    </div>
+                    <Card className="p-5 mt-4">
                         <AnimatedGradientText className="mb-10">
-                            🎉 <hr className="mx-2 h-4 w-px shrink-0 bg-gray-300" />{" "}
+                            <img src={avatarUrl} className="h-5 w-5 md:h-10 md:w-10 rounded-full" /> <hr className="mx-2 h-4 w-px shrink-0 bg-gray-300" />{" "}
                             <span
                                 className={cn(
                                     `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
@@ -263,7 +367,6 @@ const FormPage = () => {
                             >
                                 {date?.username}
                             </span>
-                            <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
                         </AnimatedGradientText>
                         <BentoGrid>
                             {features.map((feature, idx) => (
