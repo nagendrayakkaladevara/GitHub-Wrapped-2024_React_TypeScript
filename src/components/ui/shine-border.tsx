@@ -33,16 +33,16 @@ export default function ShineBorder({
 }: ShineBorderProps) {
   return (
     <div
-      style={
+      style={ 
         {
           "--border-radius": `${borderRadius}px`,
         } as React.CSSProperties
       }
       className={cn(
-        "relative w-[100%] h-[100%] place-items-center rounded-[--border-radius] bg-white text-black dark:bg-black dark:text-white",
+        "relative w-[100%] h-[100%] place-items-center rounded-[--border-radius] bg-white text-black dark:bg-black dark:text-white flex",
         className,
-      )}
-    >
+      )} 
+      >
       <div
         style={
           {
@@ -55,7 +55,7 @@ export default function ShineBorder({
         }
         className={`pointer-events-none before:bg-shine-size before:absolute before:inset-0 before:size-full before:rounded-[--border-radius] before:p-[--border-width] before:will-change-[background-position] before:content-[""] before:![-webkit-mask-composite:xor] before:![mask-composite:exclude] before:[background-image:--background-radial-gradient] before:[background-size:300%_300%] before:[mask:--mask-linear-gradient] motion-safe:before:animate-shine`}
       ></div>
-      {children}
+      <span>{children}</span>
     </div>
   );
 }
