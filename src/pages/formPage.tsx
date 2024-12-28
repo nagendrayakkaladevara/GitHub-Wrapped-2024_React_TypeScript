@@ -60,10 +60,6 @@ const FormPage = () => {
         return "bg-green-700";
     };
 
-    console.log('Username:', authUsername);
-    console.log('Password:', authPassword);
-
-
     const [username, setUsername] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
