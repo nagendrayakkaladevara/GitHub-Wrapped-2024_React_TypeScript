@@ -208,8 +208,7 @@ const FormPage = () => {
 
     const features = [
         {
-            Icon: GitCommitHorizontal,
-            name: "Total Commits made in 2024",
+            name: "",
             description: "",
             href: "#",
             cta: "",
